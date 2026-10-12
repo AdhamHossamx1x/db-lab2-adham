@@ -46,3 +46,27 @@ if (loginForm) {
     }
   });
 }
+
+// Add and edit forms of the to-do list: same rules as the server.
+document.querySelectorAll(".todo-form").forEach(function (form) {
+  form.addEventListener("submit", function (e) {
+    var title = value(form, "title").trim();
+    var errors = [];
+    if (!title) errors.push("Title is required");
+    else if (title.length > 200) errors.push("Title is too long (200 characters at most)");
+
+    if (errors.length) {
+      e.preventDefault();
+      showErrors(errors);
+    }
+  });
+});
+
+// Ask "are you sure?" before a to-do is deleted.
+document.querySelectorAll(".delete-form").forEach(function (form) {
+  form.addEventListener("submit", function (e) {
+    if (!window.confirm("Are you sure you want to delete this to-do?")) {
+      e.preventDefault();
+    }
+  });
+});

@@ -1,27 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Register</title>
-</head>
-<body>
-  <h2>Register</h2>
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+  <h1>Create your account</h1>
 
-  <ul id="errors">
-    {% for e in errors %}<li>{{ e }}</li>{% endfor %}
-  </ul>
+  <ul id="errors" class="errors">{% for e in errors -%}<li>{{ e }}</li>{%- endfor %}</ul>
 
-  <form id="register-form" method="POST" action="{{ url_for('register') }}" novalidate>
-    Name: <input type="text" name="name" value="{{ name }}"><br><br>
-    Email: <input type="email" name="email" value="{{ email }}"><br><br>
-    Password: <input type="password" name="password"><br><br>
-    Confirm password: <input type="password" name="confirm_password"><br><br>
-    <button type="submit">Register</button>
+  <form id="register-form" class="card form" method="POST" action="{{ url_for('register') }}" novalidate>
+    <label for="name">Name</label>
+    <input id="name" type="text" name="name" value="{{ name }}" autocomplete="name">
+
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" value="{{ email }}" autocomplete="email">
+
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" autocomplete="new-password">
+
+    <label for="confirm_password">Confirm password</label>
+    <input id="confirm_password" type="password" name="confirm_password" autocomplete="new-password">
+
+    <button class="btn btn-primary" type="submit">Register</button>
   </form>
 
-  <p>Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
-
-  <script src="{{ url_for('static', filename='validate.js') }}"></script>
-</body>
-</html>
+  <p class="note">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+{% endblock %}

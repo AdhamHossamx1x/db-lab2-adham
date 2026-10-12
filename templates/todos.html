@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}To-Do{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1>To-Do</h1>
+    <div class="user">
+      <span>Hi, {{ name }}</span>
+      <form method="POST" action="{{ url_for('logout') }}">
+        <button class="btn btn-small" type="submit">Log out</button>
+      </form>
+    </div>
+  </div>
+
+  <ul id="errors" class="errors">{% for e in errors -%}<li>{{ e }}</li>{%- endfor %}</ul>
+
+  <form class="todo-form add-form" method="POST" action="{{ url_for('add_todo') }}" novalidate>
+    <input type="text" name="title" value="{{ new_title }}" placeholder="What needs to be done?" aria-label="New to-do">
+    <button class="btn btn-primary" type="submit">Add</button>
+  </form>
+
+  {% if todos %}
+  <ul class="todos">
+    {% for t in todos %}
+    <li class="todo{% if t.is_done %} done{% endif %}">
+      <form method="POST" action="{{ url_for('toggle_todo', todo_id=t.todo_id) }}">
+        <input type="hidden" name="is_done" value="{{ 0 if t.is_done else 1 }}">
+        <button class="check" type="submit" aria-label="{{ 'Mark as not done' if t.is_done else 'Mark as done' }}">{% if t.is_done %}&#10003;{% endif %}</button>
+      </form>
+
+      <form class="todo-form edit-form" method="POST" action="{{ url_for('edit_todo', todo_id=t.todo_id) }}" novalidate>
+        <input type="text" name="title" value="{{ t.title }}" aria-label="To-do title">
+        <button class="btn btn-small" type="submit">Save</button>
+      </form>
+
+      <form class="delete-form" method="POST" action="{{ url_for('delete_todo', todo_id=t.todo_id) }}">
+        <button class="btn btn-small btn-danger" type="submit">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty">No to-dos yet. Type one above and press Add.</p>
+  {% endif %}
+{% endblock %}
