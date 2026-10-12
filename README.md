@@ -1,13 +1,14 @@
-# DB Lab 2 - Login application (Part I)
+## Answers of the question
+==========================
 
-Python / Flask back end, plain HTML front end, MySQL database `registration`.
+(a) Why do UPDATE and DELETE contain `AND user_id = ?`, and what changes if you remove it?**
+The id of a to-do comes from the browser, so anybody can send somebody else's number. Adding `AND user_id = ?` (the id of the logged-in user, taken from the session) makes the statement change zero rows when the to-do is not yours. If we remove it, any logged-in user could edit or delete the to-dos of other users.
 
-## How to run
+(b) What happens if you insert a to-do for a `user_id` that does not exist, and which constraint of the lecture is that?**
+MySQL rejects the INSERT and returns an error, because `todos.user_id` is a foreign key that must match an existing `users.user_id`. This is the foreign key constraint, which enforces referential integrity.
 
-1. Install Python 3 and MySQL.
-2. Install the libraries: `pip install -r requirements.txt`
-3. Create the database: run `database/schema.sql` in MySQL
-   (for example `mysql -u root -p < database/schema.sql`).
-4. Copy `.env.example` to `.env` and fill in your MySQL password and a random `SECRET_KEY`.
-5. Start the server: `python app.py`
-6. Open http://127.0.0.1:5000
+(c) Why do you store a hash and not the password?**
+If the database is leaked, the real passwords are not exposed, because a hash cannot be reversed. bcrypt adds a random salt, so two equal passwords give different hashes, and it is slow on purpose, which makes guessing passwords expensive.
+
+(d) The `name` column is NOT NULL: why did you still need your own check for an empty name?**
+NOT NULL only refuses NULL. An empty text `''` is a value, so MySQL accepts it. Only our own check, in the browser and on the server, can refuse an empty name (after trimming spaces).
